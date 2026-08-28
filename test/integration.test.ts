@@ -13,7 +13,7 @@
 // outside x4 (no sandbox up, no collision possible).
 
 import { spawn } from "node:child_process";
-import { existsSync } from "node:fs";
+import { existsSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { postClick } from "../src/api.ts";
@@ -24,15 +24,27 @@ const repoRoot = path.resolve(__dirname, "..");
 const TEST_PORT = process.env.BACKEND_TEST_PORT || "4099";
 const SANDBOX_BACKEND_URL = process.env.SANDBOX_BACKEND_URL || "http://localhost:4001";
 
+// x4's attached-repo id is whatever the registry (or whoever added the
+// project) called it — "backend", "button-demo-back", anything — not a
+// fixed name, so this scans .x4/repos/* for whichever one is actually the
+// backend, instead of assuming one literal directory name.
 function resolveBackendDir(): string {
   if (process.env.BACKEND_DIR) return process.env.BACKEND_DIR;
-  const attached = path.join(repoRoot, ".x4", "repos", "backend");
-  if (existsSync(path.join(attached, "src", "server.ts"))) return attached;
+
+  const attachedRoot = path.join(repoRoot, ".x4", "repos");
+  if (existsSync(attachedRoot)) {
+    for (const name of readdirSync(attachedRoot)) {
+      const candidate = path.join(attachedRoot, name);
+      if (existsSync(path.join(candidate, "src", "server.ts"))) return candidate;
+    }
+  }
+
   const sibling = path.join(repoRoot, "..", "button-demo-back");
   if (existsSync(path.join(sibling, "src", "server.ts"))) return sibling;
+
   throw new Error(
     "Could not find button-demo-back. Run this through `x4 workspace bootstrap` " +
-      "(it should then appear at .x4/repos/backend), or set BACKEND_DIR.",
+      "(it should then appear under .x4/repos/<id>), or set BACKEND_DIR.",
   );
 }
 
