@@ -10,6 +10,13 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const hasResponse = reply !== INITIAL_REPLY && !loading;
   const hasError = hasResponse && reply.startsWith("Error:");
+  const processStatus = loading
+    ? "Sending request to backend..."
+    : hasError
+      ? "Backend returned an error."
+      : hasResponse
+        ? "Response received from backend."
+        : "Ready to send an API call.";
 
   async function handleClick() {
     setLoading(true);
@@ -155,10 +162,34 @@ export default function App() {
         }
 
         .wire-line {
+          position: relative;
           height: 7px;
           border-radius: 999px;
           background: linear-gradient(90deg, #7c4a2f, #ca8f4f, #386b66, #7c4a2f);
           box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.5), 0 8px 20px rgba(94, 50, 30, 0.18);
+        }
+
+        .wire-line::before,
+        .wire-line::after {
+          content: "";
+          position: absolute;
+          top: 50%;
+          width: 12px;
+          height: 12px;
+          border-top: 3px solid currentColor;
+          border-right: 3px solid currentColor;
+          color: #74452d;
+        }
+
+        .wire-line::before {
+          right: 2px;
+          transform: translateY(-50%) rotate(45deg);
+        }
+
+        .wire-line::after {
+          left: 2px;
+          color: #386b66;
+          transform: translateY(-50%) rotate(225deg);
         }
 
         .wire-label {
@@ -270,6 +301,15 @@ export default function App() {
           transition: transform 160ms ease, box-shadow 160ms ease, opacity 160ms ease;
         }
 
+        .curl-button::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          border-radius: inherit;
+          background: linear-gradient(120deg, rgba(255, 244, 215, 0.22), transparent 46%);
+          pointer-events: none;
+        }
+
         .curl-button::after {
           content: "";
           position: absolute;
@@ -291,6 +331,14 @@ export default function App() {
         .curl-button:disabled {
           cursor: wait;
           opacity: 0.72;
+        }
+
+        .process-status {
+          margin: -6px 0 18px;
+          color: #5c3a2a;
+          font-size: 13px;
+          font-weight: 800;
+          letter-spacing: 0;
         }
 
         .reply-card {
@@ -330,6 +378,19 @@ export default function App() {
             height: 72px;
             justify-self: center;
             background: linear-gradient(180deg, #7c4a2f, #ca8f4f, #386b66, #7c4a2f);
+          }
+
+          .wire-line::before {
+            top: auto;
+            right: 50%;
+            bottom: 1px;
+            transform: translateX(50%) rotate(135deg);
+          }
+
+          .wire-line::after {
+            top: 1px;
+            left: 50%;
+            transform: translateX(-50%) rotate(315deg);
           }
 
           .wire-label {
@@ -388,8 +449,17 @@ export default function App() {
           </div>
         </div>
 
+        <div className="process-status" aria-live="polite">
+          {processStatus}
+        </div>
+
         <div className="control-row">
-          <input className="message-input" value={message} onChange={(e) => setMessage(e.target.value)} />
+          <input
+            className="message-input"
+            aria-label="Message to send to backend"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+          />
           <button id="click-button" className="curl-button" onClick={handleClick} disabled={loading}>
             {loading ? "Sending..." : "Send API call"}
           </button>
