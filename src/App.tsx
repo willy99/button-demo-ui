@@ -13,6 +13,7 @@ export default function App() {
   const [message, setMessage] = useState("Hello from the button!");
   const [reply, setReply] = useState(INITIAL_REPLY);
   const [loading, setLoading] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const hasResponse = reply !== INITIAL_REPLY && !loading;
   const hasError = hasResponse && reply.startsWith("Error:");
   const processStatus = loading
@@ -40,7 +41,7 @@ export default function App() {
   }
 
   return (
-    <main className="demo-shell">
+    <main className={`demo-shell ${isDarkMode ? "dark" : ""}`}>
       <style>{`
         :root {
           color: #321f17;
@@ -51,10 +52,7 @@ export default function App() {
         body {
           margin: 0;
           min-width: 320px;
-          background:
-            radial-gradient(circle at 18% 18%, rgba(255, 248, 232, 0.9), transparent 28rem),
-            radial-gradient(circle at 82% 12%, rgba(188, 124, 72, 0.28), transparent 22rem),
-            linear-gradient(135deg, #f5e4cc 0%, #b98258 46%, #553020 100%);
+          background: #f3e4d0;
         }
 
         button,
@@ -68,6 +66,19 @@ export default function App() {
           padding: 44px 20px;
           display: grid;
           place-items: center;
+          background:
+            radial-gradient(circle at 18% 18%, rgba(255, 248, 232, 0.9), transparent 28rem),
+            radial-gradient(circle at 82% 12%, rgba(188, 124, 72, 0.28), transparent 22rem),
+            linear-gradient(135deg, #f5e4cc 0%, #b98258 46%, #553020 100%);
+          transition: background 180ms ease, color 180ms ease;
+        }
+
+        .demo-shell.dark {
+          color: #f6ead8;
+          background:
+            radial-gradient(circle at 18% 18%, rgba(85, 115, 112, 0.34), transparent 28rem),
+            radial-gradient(circle at 82% 12%, rgba(189, 130, 82, 0.16), transparent 22rem),
+            linear-gradient(135deg, #111615 0%, #263331 48%, #100c0a 100%);
         }
 
         .demo-panel {
@@ -104,6 +115,41 @@ export default function App() {
           margin: 6px 0 0;
           color: #71513f;
           line-height: 1.55;
+        }
+
+        .header-tools {
+          display: grid;
+          justify-items: end;
+          gap: 12px;
+        }
+
+        .theme-toggle {
+          display: inline-grid;
+          place-items: center;
+          width: 40px;
+          height: 40px;
+          border: 1px solid rgba(87, 50, 32, 0.22);
+          border-radius: 50%;
+          color: #43261a;
+          background: rgba(255, 248, 235, 0.82);
+          box-shadow: 0 10px 20px rgba(58, 31, 19, 0.14), inset 0 1px rgba(255, 255, 255, 0.78);
+          cursor: pointer;
+          transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease, color 160ms ease;
+        }
+
+        .theme-toggle:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 14px 24px rgba(58, 31, 19, 0.2), inset 0 1px rgba(255, 255, 255, 0.78);
+        }
+
+        .theme-toggle svg {
+          width: 19px;
+          height: 19px;
+          stroke: currentColor;
+          stroke-width: 2;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+          fill: none;
         }
 
         .process-map {
@@ -366,11 +412,93 @@ export default function App() {
           font-size: 12px;
         }
 
+        .demo-shell.dark .demo-panel {
+          border-color: rgba(239, 216, 184, 0.16);
+          background:
+            linear-gradient(160deg, rgba(46, 58, 55, 0.94), rgba(29, 32, 29, 0.9)),
+            #242c29;
+          box-shadow: 0 28px 80px rgba(0, 0, 0, 0.42), inset 0 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .demo-shell.dark h1 {
+          color: #fff4df;
+          text-shadow: 0 1px rgba(0, 0, 0, 0.32);
+        }
+
+        .demo-shell.dark .demo-header p,
+        .demo-shell.dark .node small,
+        .demo-shell.dark .backend-url {
+          color: #cbb9a2;
+        }
+
+        .demo-shell.dark .theme-toggle {
+          border-color: rgba(239, 216, 184, 0.2);
+          color: #fce8b6;
+          background: rgba(23, 26, 24, 0.84);
+          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.28), inset 0 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .demo-shell.dark .node {
+          border-color: rgba(239, 216, 184, 0.14);
+          background:
+            linear-gradient(145deg, rgba(55, 68, 64, 0.94), rgba(35, 41, 38, 0.92)),
+            #2f3936;
+          box-shadow: 0 16px 35px rgba(0, 0, 0, 0.28), inset 0 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .demo-shell.dark .node::after {
+          background: rgba(255, 234, 198, 0.08);
+        }
+
+        .demo-shell.dark .node strong {
+          color: #e2a66f;
+        }
+
+        .demo-shell.dark .node span,
+        .demo-shell.dark .reply-card {
+          color: #fff4df;
+        }
+
+        .demo-shell.dark .wire-label {
+          border-color: rgba(239, 216, 184, 0.16);
+          color: #f1d8af;
+          background: rgba(25, 31, 29, 0.88);
+          box-shadow: 0 8px 18px rgba(0, 0, 0, 0.24);
+        }
+
+        .demo-shell.dark .wire-label.response-label {
+          color: #a7d0c7;
+        }
+
+        .demo-shell.dark .message-input,
+        .demo-shell.dark .reply-card {
+          border-color: rgba(239, 216, 184, 0.16);
+          background: #151a18;
+          box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.22);
+        }
+
+        .demo-shell.dark .message-input {
+          color: #fff4df;
+        }
+
+        .demo-shell.dark .message-input:focus {
+          border-color: #d09563;
+          box-shadow: 0 0 0 4px rgba(208, 149, 99, 0.2), inset 0 3px 10px rgba(0, 0, 0, 0.22);
+        }
+
+        .demo-shell.dark .process-status {
+          color: #e8cfaa;
+        }
+
         @media (max-width: 760px) {
           .demo-header,
           .control-row {
             grid-template-columns: 1fr;
             display: grid;
+          }
+
+          .header-tools {
+            justify-items: start;
           }
 
           .process-map {
@@ -434,7 +562,33 @@ export default function App() {
           <div>
             <h1>Coffee API Demo</h1>
           </div>
-          <p>Click the curled button to send a message from the UI to the backend and watch the response come home.</p>
+          <div className="header-tools">
+            <button
+              className="theme-toggle"
+              type="button"
+              aria-label={`Switch to ${isDarkMode ? "bright" : "dark"} mode`}
+              onClick={() => setIsDarkMode((current) => !current)}
+            >
+              {isDarkMode ? (
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="12" cy="12" r="4" />
+                  <path d="M12 2v2" />
+                  <path d="M12 20v2" />
+                  <path d="m4.93 4.93 1.41 1.41" />
+                  <path d="m17.66 17.66 1.41 1.41" />
+                  <path d="M2 12h2" />
+                  <path d="M20 12h2" />
+                  <path d="m6.34 17.66-1.41 1.41" />
+                  <path d="m19.07 4.93-1.41 1.41" />
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 3a6 6 0 0 0 9 7.2A9 9 0 1 1 12 3Z" />
+                </svg>
+              )}
+            </button>
+            <p>Click the curled button to send a message from the UI to the backend and watch the response come home.</p>
+          </div>
         </div>
 
         <div className="process-map" aria-hidden="true">
