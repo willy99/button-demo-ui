@@ -127,7 +127,7 @@ sandboxProfiles:
         environment:
           npm_config_cache: /tmp/.npm-cache
           HOME: /tmp
-          VITE_BACKEND_URL: http://x4-testbox-standard-1.tail49b150.ts.net/back
+          VITE_BACKEND_URL: /back
         dependsOn:
           - back
         health:
