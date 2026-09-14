@@ -15,7 +15,7 @@ repos:
   ui:
     displayName: ui
     canonicalRemote: git@github.com:willy99/button-demo-ui.git
-    defaultBranch: x4/pzhelnov/2026-08-27-ui-4815c4
+    defaultBranch: main
     packageManager: npm
     localMainPath: {localPath}/ui
     setup:
