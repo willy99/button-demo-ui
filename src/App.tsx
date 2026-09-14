@@ -3,6 +3,11 @@ import { postClick } from "./api";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4001";
 const INITIAL_REPLY = "Reply will appear here.";
+const REQUEST_ANIMATION_MS = 1100;
+
+function wait(ms: number) {
+  return new Promise((resolve) => window.setTimeout(resolve, ms));
+}
 
 export default function App() {
   const [message, setMessage] = useState("Hello from the button!");
@@ -21,10 +26,13 @@ export default function App() {
   async function handleClick() {
     setLoading(true);
     setReply("Waiting for backend...");
+    const startedAt = Date.now();
     try {
       const data = await postClick(BACKEND_URL, message);
+      await wait(Math.max(0, REQUEST_ANIMATION_MS - (Date.now() - startedAt)));
       setReply(data.reply);
     } catch (err) {
+      await wait(Math.max(0, REQUEST_ANIMATION_MS - (Date.now() - startedAt)));
       setReply(`Error: ${(err as Error).message}. Is the backend running?`);
     } finally {
       setLoading(false);
