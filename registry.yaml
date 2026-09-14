@@ -1,0 +1,152 @@
+version: 1
+repoSets:
+  button-clicker2:
+    description: Generated starter repo set. Review setup, test, env, and sandbox
+      values before team use.
+    repos:
+      - ui
+      - back
+    envBundle: button-clicker2
+    defaultSandboxProfile: local-basic
+    defaultInstallMode: eager
+    branchTemplate: feat/{featureSlug}
+    fallbackBranchTemplate: x4/{developer}/{date}-{entryRepo}-{shortId}
+repos:
+  ui:
+    displayName: ui
+    canonicalRemote: git@github.com:willy99/button-demo-ui.git
+    defaultBranch: x4/pzhelnov/2026-08-27-ui-4815c4
+    packageManager: npm
+    localMainPath: {localPath}/ui
+    setup:
+      - npm ci
+    test:
+      - npm test
+    env:
+      copyFromMain:
+        - .env
+        - .env.test
+        - .env.local
+        - .env.development.local
+      forbid:
+        - .env.production
+        - .env.prod
+      mustBeIgnored:
+        - .env
+        - .env.test
+        - .env.local
+        - .env.development.local
+    preview:
+      command: npm run dev
+      port: 4300
+  back:
+    displayName: back
+    canonicalRemote: git@github.com:willy99/button-demo-back.git
+    defaultBranch: main
+    packageManager: npm
+    localMainPath: {localPath}/back
+    setup:
+      - npm ci
+    test:
+      - npm test
+    env:
+      copyFromMain:
+        - .env
+        - .env.test
+        - .env.local
+        - .env.development.local
+      forbid:
+        - .env.production
+        - .env.prod
+      mustBeIgnored:
+        - .env
+        - .env.test
+        - .env.local
+        - .env.development.local
+    preview:
+      command: npm run dev
+      port: 4000
+sandboxProfiles:
+  azure-remote:
+    description: "Generated default profile: no local sidecars; use existing
+      dev/test services."
+    composeProfiles: []
+    requiredEnvFiles: []
+  env-file:
+    description: Inject a selected non-production env file into sandbox metadata
+      without starting services.
+    envBundle: button-clicker2
+    composeProfiles: []
+    requiredEnvFiles: []
+  local-preview:
+    description: Local preview service profile placeholder. Add services manually or
+      run x4 ai sandbox-profile to infer commands, ports, and routes.
+    envBundle: button-clicker2
+    composeProfiles: []
+    requiredEnvFiles: []
+    notes:
+      - No package dev services with ports were inferred during registry
+        generation.
+  local-basic:
+    description: "Real Docker Compose sandbox: button-demo-back + button-demo-ui."
+    envBundle: button-clicker2
+    composeProfiles: []
+    requiredEnvFiles: []
+    services:
+      - id: back
+        repo: back
+        kind: api
+        image: node:22-bookworm-slim
+        command: sh -c "rm -rf node_modules && npm install && npm start"
+        workingDir: /app
+        containerPort: 4001
+        hostPort: 4001
+        mountRepo: true
+        environment:
+          npm_config_cache: /tmp/.npm-cache
+          HOME: /tmp
+        health:
+          type: http
+          path: /api/health
+          startPeriod: 60s
+          interval: 5s
+          timeout: 5s
+          retries: 10
+      - id: ui
+        repo: ui
+        preview:
+          mode: origin
+        kind: frontend
+        image: node:22-bookworm-slim
+        command: sh -c "rm -rf node_modules && npm install && npm run dev -- --host
+          0.0.0.0 --base=/ui/"
+        workingDir: /app
+        containerPort: 5173
+        hostPort: 5173
+        mountRepo: true
+        environment:
+          npm_config_cache: /tmp/.npm-cache
+          HOME: /tmp
+          VITE_BACKEND_URL: http://x4-testbox-standard-1.tail49b150.ts.net/back
+        dependsOn:
+          - back
+        health:
+          type: http
+          path: /
+          startPeriod: 60s
+          interval: 5s
+          timeout: 5s
+          retries: 10
+    inheritance:
+      - local-basic
+envBundles:
+  button-clicker2:
+    description: Generated worker-local non-production env bundle. X4 validates key
+      names and never prints values.
+    path: /etc/x4/env/button-clicker2.env
+    allowMissing: true
+    required: []
+    optional: []
+    forbiddenPatterns:
+      - "[Pp][Rr][Oo][Dd]([Uu][Cc][Tt][Ii][Oo][Nn])?"
+      - "[Ll][Ii][Vv][Ee]"
