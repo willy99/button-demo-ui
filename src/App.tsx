@@ -9,10 +9,28 @@ function wait(ms: number) {
   return new Promise((resolve) => window.setTimeout(resolve, ms));
 }
 
+function SunIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v3M12 19v3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M2 12h3M19 12h3M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12" />
+    </svg>
+  );
+}
+
+function MoonIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M20.4 14.7A8.2 8.2 0 0 1 9.3 3.6 8.2 8.2 0 1 0 20.4 14.7Z" />
+    </svg>
+  );
+}
+
 export default function App() {
   const [message, setMessage] = useState("Hello from the button!");
   const [reply, setReply] = useState(INITIAL_REPLY);
   const [loading, setLoading] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
   const hasResponse = reply !== INITIAL_REPLY && !loading;
   const hasError = hasResponse && reply.startsWith("Error:");
   const processStatus = loading
@@ -40,7 +58,7 @@ export default function App() {
   }
 
   return (
-    <main className="demo-shell">
+    <main className={`demo-shell ${darkMode ? "theme-dark" : "theme-bright"}`}>
       <style>{`
         :root {
           color: #321f17;
@@ -68,6 +86,7 @@ export default function App() {
           padding: 44px 20px;
           display: grid;
           place-items: center;
+          transition: background 180ms ease, color 180ms ease;
         }
 
         .demo-panel {
@@ -104,6 +123,47 @@ export default function App() {
           margin: 6px 0 0;
           color: #71513f;
           line-height: 1.55;
+        }
+
+        .header-actions {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 12px;
+        }
+
+        .theme-toggle {
+          width: 42px;
+          height: 42px;
+          border: 1px solid rgba(93, 52, 32, 0.2);
+          border-radius: 50%;
+          color: #4b281c;
+          background: rgba(255, 248, 232, 0.88);
+          box-shadow: 0 10px 22px rgba(68, 35, 22, 0.16), inset 0 1px rgba(255, 255, 255, 0.72);
+          cursor: pointer;
+          display: inline-grid;
+          place-items: center;
+          transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease, color 160ms ease;
+        }
+
+        .theme-toggle:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 14px 26px rgba(68, 35, 22, 0.22), inset 0 1px rgba(255, 255, 255, 0.72);
+        }
+
+        .theme-toggle svg {
+          width: 20px;
+          height: 20px;
+          fill: none;
+          stroke: currentColor;
+          stroke-width: 2;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+        }
+
+        .theme-toggle svg circle {
+          fill: currentColor;
+          stroke: none;
         }
 
         .process-map {
@@ -366,11 +426,92 @@ export default function App() {
           font-size: 12px;
         }
 
+        .theme-dark {
+          color: #f8efe3;
+          background:
+            radial-gradient(circle at 18% 18%, rgba(111, 86, 65, 0.34), transparent 28rem),
+            radial-gradient(circle at 82% 12%, rgba(43, 103, 98, 0.28), transparent 22rem),
+            linear-gradient(135deg, #241814 0%, #342219 46%, #111b1f 100%);
+        }
+
+        .theme-dark .demo-panel {
+          border-color: rgba(255, 238, 212, 0.18);
+          background:
+            linear-gradient(160deg, rgba(54, 36, 28, 0.95), rgba(31, 46, 50, 0.9)),
+            #2e241f;
+          box-shadow: 0 28px 80px rgba(5, 9, 11, 0.48), inset 0 1px rgba(255, 255, 255, 0.08);
+        }
+
+        .theme-dark h1,
+        .theme-dark .node span,
+        .theme-dark .reply-card {
+          color: #fff4e4;
+          text-shadow: none;
+        }
+
+        .theme-dark .demo-header p,
+        .theme-dark .node small,
+        .theme-dark .process-status,
+        .theme-dark .backend-url {
+          color: #d7c2ad;
+        }
+
+        .theme-dark .theme-toggle,
+        .theme-dark .node,
+        .theme-dark .message-input,
+        .theme-dark .reply-card,
+        .theme-dark .wire-label {
+          border-color: rgba(255, 238, 212, 0.16);
+          background: rgba(30, 35, 36, 0.9);
+          box-shadow: inset 0 1px rgba(255, 255, 255, 0.08);
+        }
+
+        .theme-dark .theme-toggle {
+          color: #ffe0a3;
+        }
+
+        .theme-dark .node {
+          background:
+            linear-gradient(145deg, rgba(61, 43, 35, 0.96), rgba(31, 60, 62, 0.76)),
+            #2c3a3b;
+          box-shadow: 0 16px 35px rgba(4, 8, 9, 0.28), inset 0 1px rgba(255, 255, 255, 0.08);
+        }
+
+        .theme-dark .node strong {
+          color: #f0ad78;
+        }
+
+        .theme-dark .node::after {
+          background: rgba(255, 234, 198, 0.08);
+        }
+
+        .theme-dark .wire-label {
+          color: #f5dec4;
+        }
+
+        .theme-dark .wire-label.response-label {
+          color: #9dd4ce;
+        }
+
+        .theme-dark .message-input {
+          color: #fff4e4;
+          outline: none;
+        }
+
+        .theme-dark .message-input:focus {
+          border-color: #f0ad78;
+          box-shadow: 0 0 0 4px rgba(240, 173, 120, 0.14);
+        }
+
         @media (max-width: 760px) {
           .demo-header,
           .control-row {
             grid-template-columns: 1fr;
             display: grid;
+          }
+
+          .header-actions {
+            align-items: flex-start;
           }
 
           .process-map {
@@ -434,7 +575,17 @@ export default function App() {
           <div>
             <h1>Coffee API Demo</h1>
           </div>
-          <p>Click the curled button to send a message from the UI to the backend and watch the response come home.</p>
+          <div className="header-actions">
+            <button
+              type="button"
+              className="theme-toggle"
+              aria-label={`Switch to ${darkMode ? "bright" : "dark"} mode`}
+              onClick={() => setDarkMode((current) => !current)}
+            >
+              {darkMode ? <SunIcon /> : <MoonIcon />}
+            </button>
+            <p>Click the curled button to send a message from the UI to the backend and watch the response come home.</p>
+          </div>
         </div>
 
         <div className="process-map" aria-hidden="true">
