@@ -37,8 +37,9 @@ export default function App() {
           margin: 0;
           min-width: 320px;
           background:
-            radial-gradient(circle at top left, rgba(255, 248, 232, 0.92), transparent 36rem),
-            linear-gradient(135deg, #f6ead7 0%, #c49b73 52%, #6f412b 100%);
+            radial-gradient(circle at 18% 18%, rgba(255, 248, 232, 0.9), transparent 28rem),
+            radial-gradient(circle at 82% 12%, rgba(188, 124, 72, 0.28), transparent 22rem),
+            linear-gradient(135deg, #f5e4cc 0%, #b98258 46%, #553020 100%);
         }
 
         button,
@@ -56,11 +57,13 @@ export default function App() {
 
         .demo-panel {
           width: min(940px, 100%);
-          border: 1px solid rgba(87, 50, 32, 0.22);
+          border: 1px solid rgba(87, 50, 32, 0.26);
           border-radius: 28px;
           padding: clamp(22px, 4vw, 40px);
-          background: rgba(255, 246, 232, 0.86);
-          box-shadow: 0 28px 80px rgba(58, 31, 19, 0.28), inset 0 1px rgba(255, 255, 255, 0.75);
+          background:
+            linear-gradient(160deg, rgba(255, 248, 235, 0.92), rgba(229, 195, 154, 0.86)),
+            #f5dec0;
+          box-shadow: 0 28px 80px rgba(58, 31, 19, 0.3), inset 0 1px rgba(255, 255, 255, 0.78);
           backdrop-filter: blur(14px);
         }
 
@@ -77,7 +80,8 @@ export default function App() {
           font-size: clamp(30px, 5vw, 56px);
           line-height: 0.98;
           letter-spacing: 0;
-          color: #3a2118;
+          color: #351d14;
+          text-shadow: 0 1px rgba(255, 249, 235, 0.8);
         }
 
         .demo-header p {
@@ -90,17 +94,19 @@ export default function App() {
         .process-map {
           display: grid;
           grid-template-columns: minmax(190px, 1fr) minmax(180px, 260px) minmax(190px, 1fr);
-          gap: 18px;
+          gap: 20px;
           align-items: center;
           margin-bottom: 26px;
         }
 
         .node {
           min-height: 154px;
-          border: 1px solid rgba(96, 55, 34, 0.18);
+          border: 1px solid rgba(96, 55, 34, 0.2);
           border-radius: 24px;
           padding: 20px;
-          background: linear-gradient(145deg, #fff4df, #d7b28d);
+          background:
+            linear-gradient(145deg, rgba(255, 248, 232, 0.96), rgba(202, 151, 102, 0.76)),
+            #e3be92;
           box-shadow: 0 16px 35px rgba(80, 45, 28, 0.18), inset 0 1px rgba(255, 255, 255, 0.72);
           position: relative;
           overflow: hidden;
@@ -109,12 +115,13 @@ export default function App() {
         .node::after {
           content: "";
           position: absolute;
-          right: -20px;
-          bottom: -22px;
-          width: 76px;
-          height: 76px;
-          border-radius: 50%;
+          right: -34px;
+          bottom: -34px;
+          width: 108px;
+          height: 108px;
+          border-radius: 32px;
           background: rgba(84, 44, 25, 0.1);
+          transform: rotate(18deg);
         }
 
         .node strong {
@@ -142,7 +149,7 @@ export default function App() {
 
         .wire {
           position: relative;
-          min-height: 86px;
+          min-height: 118px;
           display: grid;
           align-items: center;
         }
@@ -152,6 +159,31 @@ export default function App() {
           border-radius: 999px;
           background: linear-gradient(90deg, #7c4a2f, #ca8f4f, #386b66, #7c4a2f);
           box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.5), 0 8px 20px rgba(94, 50, 30, 0.18);
+        }
+
+        .wire-label {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          width: max-content;
+          max-width: 100%;
+          padding: 6px 10px;
+          border-radius: 14px 7px 14px 7px;
+          border: 1px solid rgba(88, 50, 31, 0.16);
+          color: #4b2a1e;
+          background: rgba(255, 247, 231, 0.86);
+          font-size: 12px;
+          font-weight: 800;
+          box-shadow: 0 8px 18px rgba(75, 42, 29, 0.12);
+        }
+
+        .wire-label.request-label {
+          top: 18px;
+        }
+
+        .wire-label.response-label {
+          bottom: 18px;
+          color: #315f5a;
         }
 
         .packet {
@@ -224,7 +256,7 @@ export default function App() {
 
         .curl-button {
           border: 0;
-          border-radius: 24px 12px 24px 12px;
+          border-radius: 26px 10px 26px 10px;
           padding: 15px 24px;
           color: #fff9ec;
           font-weight: 800;
@@ -232,8 +264,23 @@ export default function App() {
           background: linear-gradient(145deg, #8e5636, #4b281c);
           box-shadow: 0 14px 24px rgba(68, 35, 22, 0.26), inset 0 1px rgba(255, 255, 255, 0.24);
           cursor: pointer;
+          position: relative;
+          overflow: hidden;
           transform: translateY(0);
           transition: transform 160ms ease, box-shadow 160ms ease, opacity 160ms ease;
+        }
+
+        .curl-button::after {
+          content: "";
+          position: absolute;
+          right: -14px;
+          top: -14px;
+          width: 42px;
+          height: 42px;
+          border-radius: 0 0 0 28px;
+          background: linear-gradient(135deg, rgba(255, 235, 191, 0.46), rgba(110, 61, 38, 0.18));
+          box-shadow: -4px 4px 12px rgba(50, 25, 15, 0.22);
+          pointer-events: none;
         }
 
         .curl-button:hover:not(:disabled) {
@@ -250,7 +297,7 @@ export default function App() {
           margin-top: 18px;
           min-height: 24px;
           padding: 16px 18px;
-          border-radius: 18px;
+          border-radius: 20px 12px 20px 12px;
           color: #3d251a;
           background: #fff5e3;
           border: 1px solid rgba(93, 52, 32, 0.16);
@@ -276,7 +323,36 @@ export default function App() {
 
           .wire {
             min-height: 72px;
-            transform: rotate(90deg);
+          }
+
+          .wire-line {
+            width: 7px;
+            height: 72px;
+            justify-self: center;
+            background: linear-gradient(180deg, #7c4a2f, #ca8f4f, #386b66, #7c4a2f);
+          }
+
+          .wire-label {
+            left: calc(50% + 18px);
+            transform: none;
+          }
+
+          .wire-label.request-label {
+            top: 4px;
+          }
+
+          .wire-label.response-label {
+            bottom: 4px;
+          }
+
+          @keyframes sendPacket {
+            from { top: 8%; }
+            to { top: 92%; }
+          }
+
+          @keyframes returnPacket {
+            from { top: 92%; }
+            to { top: 8%; }
           }
 
           .curl-button {
@@ -299,9 +375,11 @@ export default function App() {
             <small>Packages the message and sends a REST request.</small>
           </div>
           <div className={`wire ${loading ? "sending" : hasError ? "error" : hasResponse ? "received" : ""}`}>
+            <div className="wire-label request-label">API request</div>
             <div className="wire-line" />
             <div className="packet request" />
             <div className="packet response" />
+            <div className="wire-label response-label">Backend response</div>
           </div>
           <div className="node">
             <strong>Backend</strong>
