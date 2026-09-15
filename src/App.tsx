@@ -274,35 +274,77 @@ export default function App() {
         .packet {
           position: absolute;
           top: 50%;
-          width: 18px;
+          width: 34px;
           height: 18px;
-          border-radius: 50%;
+          border-radius: 14px 15px 10px 12px;
           opacity: 0;
-          transform: translate(-50%, -50%);
-          box-shadow: 0 0 0 7px rgba(255, 243, 217, 0.5), 0 6px 16px rgba(68, 36, 22, 0.24);
+          transform: translate(-50%, -70%);
+          color: var(--cat);
+          background:
+            linear-gradient(90deg, transparent 4px, var(--cat-leg) 4px 7px, transparent 7px 13px, var(--cat-leg) 13px 16px, transparent 16px) 6px 15px / 22px 7px no-repeat,
+            var(--cat);
+          box-shadow: 0 0 0 7px rgba(255, 243, 217, 0.46), 0 7px 16px rgba(68, 36, 22, 0.24);
+        }
+
+        .packet::before,
+        .packet::after {
+          content: "";
+          position: absolute;
+        }
+
+        .packet::before {
+          top: 1px;
+          right: -7px;
+          width: 14px;
+          height: 13px;
+          border-radius: 50% 50% 44% 44%;
+          background:
+            linear-gradient(135deg, var(--cat) 0 48%, transparent 49%) 1px -4px / 8px 8px no-repeat,
+            linear-gradient(225deg, var(--cat) 0 48%, transparent 49%) 7px -4px / 8px 8px no-repeat,
+            var(--cat);
+        }
+
+        .packet::after {
+          left: -11px;
+          top: 4px;
+          width: 15px;
+          height: 10px;
+          border-top: 4px solid currentColor;
+          border-left: 4px solid currentColor;
+          border-radius: 13px 0 0 0;
+          transform: rotate(-16deg);
         }
 
         .packet.request {
-          background: #ffe6a7;
+          --cat: #d08a48;
+          --cat-leg: #8a4e2f;
         }
 
         .packet.response {
-          background: #4f8880;
+          --cat: #4f8880;
+          --cat-leg: #2f5f59;
+          transform: translate(-50%, -70%) scaleX(-1);
         }
 
         .wire.sending .packet.request {
-          animation: sendPacket 1.1s ease-in-out infinite;
+          animation: sendPacket 1.1s ease-in-out infinite, catStride 260ms steps(2, jump-none) infinite;
           opacity: 1;
         }
 
         .wire.received .packet.response,
         .wire.error .packet.response {
-          animation: returnPacket 0.95s ease-out both;
+          animation: returnPacket 0.95s ease-out both, catStride 260ms steps(2, jump-none) infinite;
           opacity: 1;
         }
 
         .wire.error .packet.response {
-          background: #b4513f;
+          --cat: #b4513f;
+          --cat-leg: #753126;
+        }
+
+        @keyframes catStride {
+          from { background-position: 6px 15px, 0 0; }
+          to { background-position: 10px 15px, 0 0; }
         }
 
         @keyframes sendPacket {
