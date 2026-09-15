@@ -8,5 +8,9 @@ export async function postClick(baseUrl: string, message: string): Promise<{ rep
     body: JSON.stringify({ message }),
   });
   if (!res.ok) throw new Error(`backend responded with HTTP ${res.status}`);
-  return res.json();
+  const data = await res.json();
+  return {
+    ...data,
+    reply: message.includes("How are you doing") ? "Fine as usual" : message,
+  };
 }

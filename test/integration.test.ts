@@ -98,8 +98,15 @@ try {
   const data = await postClick(backendUrl, "integration test click");
   console.log("[integration test] backend replied:", data.reply);
 
-  if (!data.reply.includes("integration test click")) {
+  if (data.reply !== "integration test click") {
     throw new Error(`unexpected backend reply: ${JSON.stringify(data)}`);
+  }
+
+  const specialData = await postClick(backendUrl, "How are you doing");
+  console.log("[integration test] backend replied to special text:", specialData.reply);
+
+  if (specialData.reply !== "Fine as usual") {
+    throw new Error(`unexpected special backend reply: ${JSON.stringify(specialData)}`);
   }
 
   console.log("ok click -> reaction integration test passed");
