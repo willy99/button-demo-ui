@@ -560,7 +560,7 @@ export default function App() {
       <section className="demo-panel" aria-label="API call demo">
         <div className="demo-header">
           <div>
-            <h1>Coffee API Demo</h1>
+            <h1>API Demo</h1>
           </div>
           <div className="header-tools">
             <button
@@ -587,7 +587,6 @@ export default function App() {
                 </svg>
               )}
             </button>
-            <p>Click the curled button to send a message from the UI to the backend and watch the response come home.</p>
           </div>
         </div>
 
@@ -630,7 +629,7 @@ export default function App() {
         <div id="reply" className="reply-card">
           {reply}
         </div>
-        <p className="backend-url">Backend: {BACKEND_URL}</p>
+        <p className="backend-url">Backend: /back</p>
       </section>
     </main>
   );
