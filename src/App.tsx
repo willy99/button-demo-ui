@@ -353,8 +353,9 @@ export default function App() {
         }
 
         @keyframes returnPacket {
-          from { left: 97%; }
-          to { left: 3%; }
+          from { left: 97%; opacity: 1; }
+          99% { left: 3%; opacity: 1; }
+          to { left: 3%; opacity: 0; }
         }
 
         .control-row {
@@ -590,8 +591,9 @@ export default function App() {
           }
 
           @keyframes returnPacket {
-            from { top: 92%; }
-            to { top: 8%; }
+            from { top: 92%; opacity: 1; }
+            99% { top: 8%; opacity: 1; }
+            to { top: 8%; opacity: 0; }
           }
 
           .curl-button {
