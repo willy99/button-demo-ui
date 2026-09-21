@@ -13,7 +13,7 @@ export default function App() {
   const [message, setMessage] = useState("Hello from the button!");
   const [reply, setReply] = useState(INITIAL_REPLY);
   const [loading, setLoading] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const hasResponse = reply !== INITIAL_REPLY && !loading;
   const hasError = hasResponse && reply.startsWith("Error:");
   const processStatus = loading
