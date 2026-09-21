@@ -10,7 +10,7 @@ function wait(ms: number) {
 }
 
 export default function App() {
-  const [message, setMessage] = useState("Hello from the button!");
+  const [message, setMessage] = useState("");
   const [reply, setReply] = useState(INITIAL_REPLY);
   const [loading, setLoading] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
@@ -663,8 +663,12 @@ export default function App() {
                 className="message-input"
                 aria-label="Message to send to backend"
                 value={message}
+                placeholder="Write something here"
                 onChange={(e) => setMessage(e.target.value)}
             />
+            <button type="button" className="curl-button" onClick={() => setMessage("")}>
+              Clear
+            </button>
             <button id="click-button" className="curl-button" onClick={handleClick} disabled={loading}>
               {loading ? "Sending..." : "Send API call"}
             </button>
