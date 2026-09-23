@@ -8,6 +8,8 @@ export default function App() {
   const [message, setMessage] = useState("Hello from the button!");
   const [reply, setReply] = useState(INITIAL_REPLY);
   const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState<"demo" | "messages">("demo");
+  const [submittedMessages, setSubmittedMessages] = useState<string[]>([]);
   const hasResponse = reply !== INITIAL_REPLY && !loading;
   const hasError = hasResponse && reply.startsWith("Error:");
   const processStatus = loading
@@ -19,10 +21,12 @@ export default function App() {
         : "Ready to send an API call.";
 
   async function handleClick() {
+    const submittedMessage = message;
+    setSubmittedMessages((current) => [...current, submittedMessage]);
     setLoading(true);
     setReply("Waiting for backend...");
     try {
-      const data = await postClick(BACKEND_URL, message);
+      const data = await postClick(BACKEND_URL, submittedMessage);
       setReply(data.reply);
     } catch (err) {
       setReply(`Error: ${(err as Error).message}. Is the backend running?`);
@@ -358,6 +362,78 @@ export default function App() {
           font-size: 12px;
         }
 
+        .tab-list {
+          display: flex;
+          gap: 8px;
+          margin-bottom: 24px;
+          padding: 5px;
+          border-radius: 18px;
+          background: rgba(104, 59, 36, 0.1);
+        }
+
+        .tab-button {
+          flex: 1;
+          border: 1px solid transparent;
+          border-radius: 13px;
+          padding: 11px 16px;
+          color: #6e4935;
+          background: transparent;
+          font-weight: 800;
+          cursor: pointer;
+          transition: background 160ms ease, color 160ms ease, box-shadow 160ms ease;
+        }
+
+        .tab-button:hover {
+          color: #3f251a;
+        }
+
+        .tab-button[aria-selected="true"] {
+          color: #3f251a;
+          background: #fff7e8;
+          border-color: rgba(93, 52, 32, 0.14);
+          box-shadow: 0 5px 14px rgba(77, 42, 25, 0.12);
+        }
+
+        .messages-panel {
+          min-height: 352px;
+        }
+
+        .messages-heading {
+          margin: 0 0 14px;
+          color: #4a2b1e;
+          font-size: 18px;
+        }
+
+        .messages-empty {
+          display: grid;
+          min-height: 300px;
+          place-items: center;
+          padding: 24px;
+          border: 1px dashed rgba(93, 52, 32, 0.28);
+          border-radius: 20px 12px 20px 12px;
+          color: #765641;
+          background: rgba(255, 248, 235, 0.45);
+          text-align: center;
+        }
+
+        .messages-list {
+          display: grid;
+          gap: 10px;
+          margin: 0;
+          padding: 0;
+          list-style: none;
+        }
+
+        .message-item {
+          padding: 14px 16px;
+          border: 1px solid rgba(93, 52, 32, 0.14);
+          border-radius: 16px 10px 16px 10px;
+          color: #3d251a;
+          background: #fff5e3;
+          box-shadow: inset 0 1px rgba(255, 255, 255, 0.8);
+          overflow-wrap: anywhere;
+        }
+
         @media (max-width: 760px) {
           .demo-header,
           .control-row {
@@ -429,8 +505,33 @@ export default function App() {
           <p>Click the curled button to send a message from the UI to the backend and watch the response come home.</p>
         </div>
 
-        <div className="process-map" aria-hidden="true">
-          <div className="node">
+        <div className="tab-list" role="tablist" aria-label="Demo views">
+          <button
+            id="demo-tab"
+            className="tab-button"
+            role="tab"
+            aria-selected={activeTab === "demo"}
+            aria-controls="demo-panel"
+            onClick={() => setActiveTab("demo")}
+          >
+            API Demo
+          </button>
+          <button
+            id="messages-tab"
+            className="tab-button"
+            role="tab"
+            aria-selected={activeTab === "messages"}
+            aria-controls="messages-panel"
+            onClick={() => setActiveTab("messages")}
+          >
+            Messages
+          </button>
+        </div>
+
+        {activeTab === "demo" ? (
+          <div id="demo-panel" role="tabpanel" aria-labelledby="demo-tab">
+            <div className="process-map" aria-hidden="true">
+              <div className="node">
             <strong>Frontend</strong>
             <span>button-demo-ui</span>
             <small>Packages the message and sends a REST request.</small>
@@ -468,7 +569,24 @@ export default function App() {
         <div id="reply" className="reply-card">
           {reply}
         </div>
-        <p className="backend-url">Backend: {BACKEND_URL}</p>
+            <p className="backend-url">Backend: {BACKEND_URL}</p>
+          </div>
+        ) : (
+          <div id="messages-panel" className="messages-panel" role="tabpanel" aria-labelledby="messages-tab">
+            <h2 className="messages-heading">Messages you sent</h2>
+            {submittedMessages.length === 0 ? (
+              <div className="messages-empty">Messages you send will appear here.</div>
+            ) : (
+              <ol className="messages-list">
+                {submittedMessages.map((submittedMessage, index) => (
+                  <li className="message-item" key={`${index}-${submittedMessage}`}>
+                    {submittedMessage}
+                  </li>
+                ))}
+              </ol>
+            )}
+          </div>
+        )}
       </section>
     </main>
   );
