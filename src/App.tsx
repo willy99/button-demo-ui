@@ -666,7 +666,7 @@ export default function App() {
                 onChange={(e) => setMessage(e.target.value)}
             />
             <button id="click-button" className="curl-button" onClick={handleClick} disabled={loading}>
-              {loading ? "Sending..." : "Send API call"}
+              {loading ? "Sending..." : "Smack me"}
             </button>
           </div>
 
